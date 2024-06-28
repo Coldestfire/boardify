@@ -16,7 +16,7 @@ export const Logo = () => {
                 <Image src="/stack.svg" alt="logo" width={30} height={30} />
             
 
-            <p className="text-lg text-neutral-700 pb-1">
+            <p className="text-xl text-neutral-700">
                 Boardify
             </p>
             </div>

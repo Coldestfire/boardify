@@ -1,7 +1,9 @@
+import { Navbar } from "../../_components/navbar";
+
 const OrganizationIdPage = () => {
     return(
         <div>
-            Organization Page!
+            organization page
         </div>
     )
 }
