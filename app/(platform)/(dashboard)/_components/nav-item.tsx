@@ -81,7 +81,12 @@ const onClick = (href: string) => {
                         className="rounded-sm object-cover"
                         />
 
+                       
+
                     </div>
+                    <span className="font-medium text-sm">
+                            {organization.name}
+                        </span>
                     </div>
             </AccordionTrigger>
             <AccordionContent className="pt-1 text-neutral-700">
