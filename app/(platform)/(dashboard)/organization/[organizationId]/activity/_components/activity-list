@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { log } from 'console';
 
 export const ActivityList = async () => {
   const { orgId } = auth();

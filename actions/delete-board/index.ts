@@ -13,8 +13,8 @@ import { InputType, ReturnType } from "./types";
 import { createAuditLog } from "@/lib/create-audit-log";
 import { ACTION, ENTITY_TYPE } from "@prisma/client";
 
-// import { decreaseAvailableCount } from "@/lib/org-limit";
-// import { checkSubscription } from "@/lib/subscription";
+import { decreaseAvailableCount } from "@/lib/org-limit";
+import { checkSubscription } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs/server";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -26,7 +26,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     };
   }
 
-  // const isPro = await checkSubscription();
+  const isPro = await checkSubscription();
 
   const { id } = data;
   let board;
@@ -39,9 +39,9 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       },
     });
 
-    // if (!isPro) {
-    //   await decreaseAvailableCount();
-    // }
+    if (!isPro) {
+      await decreaseAvailableCount();
+    }
 
     await createAuditLog({
       entityTitle: board.title,

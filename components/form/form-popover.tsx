@@ -1,25 +1,25 @@
 "use client";
 
+import { ElementRef, useRef } from "react";
+import { toast } from "sonner";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 import {
   Popover,
-  PopoverClose,
   PopoverContent,
   PopoverTrigger,
+  PopoverClose,
 } from "@/components/ui/popover";
-
 import { useAction } from "@/hooks/use-action";
-import { CreateBoard } from "@/actions/create-board/schema";
+import { Button } from "@/components/ui/button";
+import { createBoard } from "@/actions/create-board";
 
 import { FormInput } from "./form-input";
 import { FormSubmit } from "./form-submit";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
-import { FieldErrors } from "../../lib/create-safe-action";
-import { createBoard } from "@/actions/create-board";
-import { toast } from "sonner";
 import { FormPicker } from "./form-picker";
-import { ElementRef, useRef } from "react";
-import {useRouter} from "next/navigation";
+
+import { useProModal } from "@/hooks/use-pro-modal";
 
 interface FormPopoverProps {
   children: React.ReactNode;
@@ -34,29 +34,29 @@ export const FormPopover = ({
   align,
   sideOffset = 0,
 }: FormPopoverProps) => {
+  const proModal = useProModal();
   const router = useRouter();
   const closeRef = useRef<ElementRef<"button">>(null);
 
-
   const { execute, fieldErrors } = useAction(createBoard, {
     onSuccess: (data) => {
-      console.log({ data });
-      toast.success("Board Created!");
+      toast.success("Board created!");
       closeRef.current?.click();
       router.push(`/board/${data.id}`);
     },
     onError: (error) => {
-      console.log({ error });
       toast.error(error);
+      proModal.onOpen();
     },
   });
 
   const onSubmit = (formData: FormData) => {
     const title = formData.get("title") as string;
-
     const image = formData.get("image") as string;
+
     execute({ title, image });
   };
+
   return (
     <Popover>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
@@ -67,7 +67,7 @@ export const FormPopover = ({
         sideOffset={sideOffset}
       >
         <div className="text-sm font-medium text-center text-neutral-600 pb-4">
-          Create Board
+          Create board
         </div>
         <PopoverClose ref={closeRef} asChild>
           <Button
@@ -80,10 +80,9 @@ export const FormPopover = ({
         <form action={onSubmit} className="space-y-4">
           <div className="space-y-4">
             <FormPicker id="image" errors={fieldErrors} />
-
             <FormInput
-              id={"title"}
-              label="Board Title"
+              id="title"
+              label="Board title"
               type="text"
               errors={fieldErrors}
             />
