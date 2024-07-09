@@ -1,7 +1,7 @@
 import { Board } from "@prisma/client";
-
 import { BoardTitleForm } from "./board-title-form";
 import { BoardOptions } from "./board-options";
+import AiSuggestion from "./ai-suggestion";
 
 interface BoardNavbarProps {
   data: Board;
@@ -10,8 +10,12 @@ interface BoardNavbarProps {
 export const BoardNavbar = async ({ data }: BoardNavbarProps) => {
   return (
     <div className="w-full h-14 z-[40] bg-black/50 fixed top-14 flex items-center px-6 gap-x-4 text-white">
+     
       <BoardTitleForm data={data} />
+      {/* REPLACE WITH AI SUGGESTION */}
+      <div className="ml-auto"> <AiSuggestion /> </div> 
       <div className="ml-auto">
+    
         <BoardOptions id={data.id} />
       </div>
     </div>
