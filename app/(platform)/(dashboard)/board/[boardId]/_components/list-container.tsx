@@ -158,7 +158,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
             {...provided.droppableProps}
             ref={provided.innerRef}
             // list margin below. adjust mt to set how down it is
-            className="flex gap-x-3 h-full mt-40"
+            className="flex gap-x-3 h-full mt-20"
           >
             {orderedData.map((list, index) => {
               return <ListItem key={list.id} index={index} data={list} />;

@@ -3,6 +3,10 @@ import { BoardTitleForm } from "./board-title-form";
 import { BoardOptions } from "./board-options";
 import AiSuggestion from "./ai-suggestion";
 
+import React from "react";
+import {Popover, PopoverTrigger, PopoverContent, Button} from "@nextui-org/react";
+import { Bot } from 'lucide-react';
+
 interface BoardNavbarProps {
   data: Board;
 }
@@ -14,11 +18,23 @@ export const BoardNavbar = async ({ data }: BoardNavbarProps) => {
      
       <BoardTitleForm data={data} />
       {/* REPLACE WITH AI SUGGESTION */}
-      <div className="ml-auto mr-16"> <AiSuggestion /> </div> 
+      <div className="ml-auto mr-16">
+      <Popover placement="bottom" showArrow={true}>
+      <PopoverTrigger>
+        <Button className="text-sm"><Bot/> click for AI suggestion</Button>
+      </PopoverTrigger>
+      <PopoverContent>
+         <AiSuggestion /> 
+      </PopoverContent>
+    </Popover>
+    </div> 
+      
       <div className="ml-auto">
     
         <BoardOptions id={data.id} />
+        
       </div>
+      
     </div>
   );
 };
