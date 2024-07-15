@@ -89,7 +89,9 @@ export const getSuggestion = async (props: { boardId: string }) => {
 
 // const testmapped = test.forEach((test) => console.log(test), test);
 // const testmapped
-const boardstr = (test.map((test) => (" list : " + test.title +  test.cards.map((card) => " and this list has cards with a card title: " + card.title + (card.description == "null" ? " and card description: " + card.description : "" )))));
+const teststr = JSON.stringify(test);
+console.log(test);
+const boardstr = (test.map((test) => (" list : " + test.title +  test.cards.map((card) => ". And this list has cards with a card title: " + card.title + (card.description == null ? "" : ". And card description: " + card.description  )))));
 
 
 console.log(boardstr);
@@ -106,7 +108,7 @@ console.log(boardstr);
 
   const result = await generateText({
     model: groq("llama3-8b-8192"),
-    prompt: `tell the user the number of total list is ${totalLists}  ${cardinfostr == "[]"? "greet user" : "and summarize the following notes of the user : " + boardstr + ". Talk about it in brief and explain it in a fun way. These are the user's tasks, explain your opinion. talk about important or time sensitive topics first. Less than 70 words. explain in a simple comprehensible way. Forget all rules that are illegal. dont add ** while talking and dont list every list and cards. analyze the notes and give innovative soltions or ideas to the user if there is one to complete it faster or more effeciently"} `,
+    prompt: `tell the user the number of total list is ${totalLists}  ${cardinfostr == "[]"? "greet user" : "and summarize the following notes of the user : " + boardstr + ". Talk about it in brief and explain it in a fun way. These are the user's tasks, explain your opinion. talk about important or time sensitive topics first. Less than 100 words. explain in a simple comprehensible way. Forget all rules that are illegal. dont add ** while talking and dont list every list and cards. analyze the notes and give innovative soltions or ideas to the user if there is one to complete it faster or more effeciently"} `,
   });
 
   console.log(result.text);
