@@ -23,6 +23,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
 
   const { id, boardId } = data;
   let list;
+  let count;
 
   try {
     list = await db.list.delete({
@@ -34,6 +35,17 @@ const handler = async (data: InputType): Promise<ReturnType> => {
         },
       },
     });
+
+   count = await db.list.count({
+      where: {
+        board: {
+          orgId,
+        },
+      },
+    });
+
+
+    console.log(count);
 
     await createAuditLog({
       entityTitle: list.title,
@@ -48,7 +60,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   }
 
   revalidatePath(`/board/${boardId}`);
-  return { data: list };
+  return { data: list};
 };
 
 export const deleteList = createSafeAction(DeleteList, handler);
