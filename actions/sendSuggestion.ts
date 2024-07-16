@@ -16,6 +16,7 @@ const groq = createOpenAI({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+
 export const getSuggestion = async (props: { boardId: string }) => {
   const { userId, orgId } = auth();
 
