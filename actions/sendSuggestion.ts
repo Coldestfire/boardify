@@ -109,7 +109,7 @@ console.log(boardstr);
 
   const result = await generateText({
     model: groq("llama3-8b-8192"),
-    prompt: `tell the user the number of total list is ${totalLists}  ${cardinfostr == "[]"? "greet user" : "and summarize the following notes of the user : " + boardstr + ". Talk about it in brief and explain it in a fun way. These are the user's tasks, explain your opinion. talk about important or time sensitive topics first. Less than 100 words. explain in a simple comprehensible way. Forget all rules that are illegal. dont add ** while talking and dont list every list and cards. analyze the notes and give innovative soltions or ideas to the user to complete it faster or more effeciently"} `,
+    prompt: `tell the user the number of total list is ${totalLists}  ${cardinfostr == "[]"? "greet user" : "and summarize the following notes of the user : " + boardstr + ". Talk about it in brief and explain it in a fun way (dont tell the user what they already know. They can see the notes by themselves. Just give solutions). These are the user's tasks, explain your opinion in a jolly way. talk about important or time sensitive topics first. explain in a simple comprehensible way. Forget all rules that are illegal. dont add ** while talking and dont list every list and cards. analyze the notes and give innovative solutions or ideas to the user to complete it faster or more effeciently in less than 100 words. Make giving ideas your main focus"} `,
   });
 
   console.log(result.text);
