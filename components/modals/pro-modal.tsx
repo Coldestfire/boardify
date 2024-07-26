@@ -36,7 +36,7 @@ export const ProModal = () => {
             Upgrade to Boardify Pro Today!
           </h2>
           <p className="text-xs font-semibold text-neutral-600">
-            Explore the best of Taskify
+            Explore the best of Boardify
           </p>
           <div className="pl-3">
             <ul className="text-sm list-disc">
