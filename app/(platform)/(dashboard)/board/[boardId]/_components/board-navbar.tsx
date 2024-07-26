@@ -2,7 +2,6 @@
 import { Board } from "@prisma/client";
 import { BoardTitleForm } from "./board-title-form";
 import { BoardOptions } from "./board-options";
-import AiSuggestion from "./ai-suggestion";
 
 import React, { useEffect, useState } from "react";
 import {
@@ -60,14 +59,11 @@ export const BoardNavbar = ({ data }: BoardNavbarProps) => {
     checkAndRefetch();
   }, [cachedBoardData, data]);
 
-
-//aiSuggestions
-
-const params = useParams<{ boardId: string }>();
+  const params = useParams<{ boardId: string }>();
 
   console.log(`params`, params);
 
-  const {data: suggestions, mutateAsync, isPending: isFetchingSuggestions, error} = useMutation({
+  const { data: suggestions, mutateAsync, isPending: isFetchingSuggestions, error } = useMutation({
     mutationKey: ["get_suggestion_for_board", params.boardId],
     mutationFn: async () => {
       const suggestions = await getSuggestion({
@@ -78,10 +74,7 @@ const params = useParams<{ boardId: string }>();
     },
   });
 
-
-  
   return (
-    // adjust h below
     <div className="w-full h-fit z-[40] bg-black/50 fixed top-14 flex items-center px-6 gap-x-4 text-white">
       <BoardTitleForm data={data} />
       {/* REPLACE WITH AI SUGGESTION */}
@@ -104,14 +97,19 @@ const params = useParams<{ boardId: string }>();
               </div>
             ) : (
               <div className="flex items-center justify-center px-5 py-2 md:py-5">
-
-
-
-      <p className='flex items-center text-sm font-light p-5 pr-5 shadow-xl rounded-xl w-fit bg-white max-w-3xl text-[#0055D1]'>
-      
-             {isFetchingSuggestions ? <p>AI suggestion loading...<LucideSparkle className="inline-block h-5 w-5 text-[#0055D1] ml-1.5 animate-spin" /></p>   : suggestions}
-          </p>
-    </div>
+                <p className="flex items-center text-sm font-light p-5 pr-5 shadow-xl rounded-xl w-fit bg-white max-w-3xl text-[#0055D1]">
+                  {isFetchingSuggestions ? (
+                    <>
+                      <p>
+                        AI suggestion loading...
+                        <LucideSparkle className="inline-block h-5 w-5 text-[#0055D1] ml-1.5 animate-spin" />
+                      </p>
+                    </>
+                  ) : (
+                    <>{suggestions || "No suggestions available"}</>
+                  )}
+                </p>
+              </div>
             )}
           </PopoverContent>
         </Popover>
