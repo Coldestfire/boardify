@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 
 import { ListContainer } from "./_components/list-container";
-import AiSuggestion from "./_components/ai-suggestion";
 
 interface BoardIdPageProps {
   params: {
@@ -40,7 +39,6 @@ const BoardIdPage = async ({ params }: BoardIdPageProps) => {
 
   return (
     <div className="p-4 h-full overflow-x-auto pt-0">
-      {/* <div className="ml-auto mr-16 "> <AiSuggestion /> </div>  */}
       <ListContainer boardId={params.boardId} data={lists} />
     </div>
   );
