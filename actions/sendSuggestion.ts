@@ -1,12 +1,10 @@
 "use server";
-import { Description } from "./../components/modals/card-modal/description";
 
 import { generateText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { string } from "zod";
 import { redis } from "@/lib/redis";
 
 const groq = createOpenAI({
@@ -74,6 +72,9 @@ export const getSuggestion = async (props: { boardId: string }) => {
 
   if (cachedHash === boardDataHash && cachedResult) {
     console.log("Using cached result");
+    console.log(cachedResult + " cachedResult");
+    console.log(cachedHash + " cachedHash");
+    console.log(boardDataHash + " boardDataHash");
     return cachedResult;
   }
 

@@ -20,6 +20,7 @@ export default clerkMiddleware((auth,req,event)=>{
 
     if( auth().orgId){
       path = `/organization/${auth().orgId}`
+      
     }
     return NextResponse.redirect(new URL(path, req.url))
   }
