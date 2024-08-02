@@ -40,7 +40,7 @@ export const CardModal = () => {
   return (
     <QueryProvider>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent>
+        <DialogContent className="max-h-[100vh] overflow-y-auto p-5">
           {!cardData ? <Header.Skeleton /> : <Header data={cardData} />}
           <div className="grid grid-cols-1 md:grid-cols-4 md:gap-4">
             <div className="col-span-3">
@@ -51,7 +51,7 @@ export const CardModal = () => {
                   <Description data={cardData} />
                 )}
                 <ChecklistComponent cardId={id!} />
-                <LabelComponent cardId={id!} labels={labels || []} />
+                
                 {!auditLogsData ? (
                   <Activity.Skeleton />
                 ) : (
@@ -59,7 +59,11 @@ export const CardModal = () => {
                 )}
               </div>
             </div>
-            {!cardData ? <Actions.Skeleton /> : <Actions data={cardData} />}
+            {/* right side */}
+            <div className="flex-col">
+              {!cardData ? <Actions.Skeleton /> : <Actions data={cardData} />}
+            <LabelComponent cardId={id!} labels={labels || []} />
+            </div>
           </div>
           
         </DialogContent>

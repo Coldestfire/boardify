@@ -1,60 +1,64 @@
 import { db } from '@/lib/db';
-import { Label } from '@prisma/client';
+import { fetcher } from '@/lib/fetcher';
+import { revalidatePath } from 'next/cache';
 
-export const createLabel = async (cardId: string, data: { title: string; color: string }): Promise<Label> => {
+export const createLabel = async (cardId: string,  title: string, color: string) => {
   try {
-    const label = await db.label.create({
+    const createdLabel = await db.label.create({
       data: {
-        ...data,
-        cards: {
-          connect: { id: cardId }
-        }
-      }
+        cardId,
+        title,
+        color,
+        
+      },
+      
     });
-    return label;
-  } catch (error) {
-    console.error('Failed to create label:', error);
-    throw new Error('Failed to create label');
+    revalidatePath(`/cards/${cardId}`)
+    console.log(createdLabel)
+    return createdLabel;
+  } catch(error){
+    console.log(error);
   }
 };
 
-export const updateLabel = async (labelId: string, data: { title: string; color: string }): Promise<Label> => {
-  try {
-    const label = await db.label.update({
-      where: { id: labelId },
-      data
-    });
-    return label;
-  } catch (error) {
-    console.error('Failed to update label:', error);
+export const fetchLabels = async (cardId: string) => {
+  const labels = await db.label.findMany({
+    where: {
+      cardId: cardId,
+      },
+  });
+  console.log(labels + " from label actions")
+  return labels;
+};
+
+export const updateLabel = async (label: { id: string; title: string; color: string }, cardId: string) => {
+  const response = await fetch(`/api/cards/${cardId}/labels/${label.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(label),
+  });
+
+  if (!response.ok) {
     throw new Error('Failed to update label');
   }
+
+  return response.json();
 };
 
-export const deleteLabel = async (labelId: string): Promise<Label> => {
-  try {
-    const label = await db.label.delete({
-      where: { id: labelId }
-    });
-    return label;
-  } catch (error) {
-    console.error('Failed to delete label:', error);
+export const deleteLabel = async (labelId: string, cardId: string) => {
+  const response = await fetch(`/api/cards/${cardId}/labels`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ id: labelId }),
+  });
+
+  if (!response.ok) {
     throw new Error('Failed to delete label');
   }
-};
 
-export const getLabelsForCard = async (cardId: string): Promise<Label[]> => {
-  try {
-    const labels = await db.label.findMany({
-      where: {
-        cards: {
-          some: { id: cardId }
-        }
-      }
-    });
-    return labels;
-  } catch (error) {
-    console.error('Failed to get labels for card:', error);
-    throw new Error('Failed to get labels for card');
-  }
+  return response.json();
 };

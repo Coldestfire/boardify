@@ -1,37 +1,55 @@
-import { db } from '@/lib/db';
-import { Checklist } from '@prisma/client';
+"use server";
 
-interface CreateChecklistItemInput {
-  cardId: string;
-  title: string;
-}
+import { Checklist } from '@/types';
+import {db} from "@/lib/db"
+import { revalidatePath } from 'next/cache';
 
-interface DeleteChecklistItemInput {
-  id: string;
-}
-
-interface UpdateChecklistItemInput extends Checklist {}
-
-export const createChecklistItem = async ({ cardId, title }: CreateChecklistItemInput): Promise<Checklist> => {
-  return await db.checklist.create({
-    data: {
+export const fetchChecklists = async (cardId: string) => {
+  const checklists = await db.checklist.findMany({
+    where: {
       cardId,
-      title,
-      completed: false,
     },
   });
+  return checklists;
 };
 
-
-export const deleteChecklistItem = async ({ id }: DeleteChecklistItemInput): Promise<Checklist> => {
-  return await db.checklist.delete({
-    where: { id },
-  });
+export const createChecklist = async (cardId: string, title: string) => {
+  console.log("createChecklist", cardId, title)
+  try {
+    const createdChecklist = await db.checklist.create({
+      data: {
+        title,
+        cardId,
+      },
+      
+    });
+    revalidatePath(`/cards/${cardId}`)
+    console.log(createdChecklist)
+    return createdChecklist;
+  } catch(error){
+    console.log(error);
+  }
+  
 };
 
-export const updateChecklistItem = async (item: UpdateChecklistItemInput): Promise<Checklist> => {
-  return await db.checklist.update({
-    where: { id: item.id },
-    data: item,
+export const toggleChecklist = async (id: string, cardId: string, completed: boolean) => {
+  const toggled = await db.checklist.update({
+    where: {
+      id,
+    },
+    data: {
+      completed: !completed,
+    },
   });
+  revalidatePath(`/cards/${cardId}`)
+  return toggled
+};
+
+export const deleteChecklist = async (id: string, cardId: string) => {
+  await db.checklist.delete({
+    where: {
+      id,
+    },
+  });
+  revalidatePath(`/cards/${cardId}`)
 };

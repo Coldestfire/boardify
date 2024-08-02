@@ -13,7 +13,9 @@ const Platformlayout = ({
             <QueryProvider>
             <Toaster />
             <ModalProvider />
+            
             {children}
+            
             </QueryProvider>
         </ClerkProvider>
     )

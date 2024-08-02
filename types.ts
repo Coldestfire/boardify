@@ -14,3 +14,15 @@ export interface ChecklistItem {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Checklist {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export interface Label {
+  id: string;
+  title: string | undefined;
+  color: string;
+}

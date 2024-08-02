@@ -45,13 +45,13 @@ model Card {
   order       Int
   listId      String
   list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
-  labels      Label[]  @relation("CardLabels")
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([listId])
   Checklist Checklist[]
+  Label Label[]
 }
 
 enum ACTION {
@@ -114,7 +114,10 @@ model Checklist {
 
 model Label {
   id        String   @id @default(uuid())
+   cardId    String
   title     String
   color     String
-  cards     Card[]   @relation("CardLabels")
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([cardId])
 }
