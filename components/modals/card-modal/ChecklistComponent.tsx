@@ -118,8 +118,7 @@ const ChecklistComponent: React.FC<ChecklistComponentProps> = ({ cardId }) => {
   };
 
   const totalChecklists = checklists?.length || 0;
-  const completedChecklists =
-    checklists?.filter((item) => item.completed).length || 0;
+  const completedChecklists = checklists?.filter((item) => item.completed).length || 0;
   const progress = totalChecklists
     ? (completedChecklists / totalChecklists) * 100
     : 0;

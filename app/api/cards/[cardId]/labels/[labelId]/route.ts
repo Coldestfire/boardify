@@ -1,52 +1,49 @@
-import { fetcher } from '@/lib/fetcher';
+import { NextResponse } from 'next/server';
+import { db } from '@/lib/db';
 
-// Function to create a label
-export const createLabel = async (cardId: string, { title, color }: { title: string; color: string }) => {
-  const response = await fetch(`/api/cards/${cardId}/labels`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ title, color }),
-  });
+// Extracts the labelId from the URL
+function extractLabelId(url: string): string | null {
+  const labelMatch = url.match(/\/labels\/([^\/]+)/);
+  return labelMatch ? labelMatch[1] : null;
+}
 
-  if (!response.ok) {
-    throw new Error('Failed to create label');
+// Handler for updating a label
+export async function PUT(request: Request) {
+  try {
+    const labelId = extractLabelId(request.url);
+    if (!labelId) {
+      return NextResponse.error();
+    }
+
+    const { title, color } = await request.json();
+
+    const updatedLabel = await db.label.update({
+      where: { id: labelId },
+      data: { title, color },
+    });
+
+    return NextResponse.json(updatedLabel);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.error();
   }
+}
 
-  return response.json();
-};
+// Handler for deleting a label
+export async function DELETE(request: Request) {
+  try {
+    const labelId = extractLabelId(request.url);
+    if (!labelId) {
+      return NextResponse.error();
+    }
 
-// Function to update a label
-export const updateLabel = async (cardId: string, id: string, p0: { title: string; color: string; }, label: { id: string; title: string; color: string; }) => {
-  const response = await fetch(`/api/cards/labels/${label.id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(label),
-  });
+    await db.label.delete({
+      where: { id: labelId },
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to update label');
+    return NextResponse.json({ message: 'Label deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.error();
   }
-
-  return response.json();
-};
-
-// Function to delete a label
-export const deleteLabel = async (labelId: string) => {
-  const response = await fetch(`/api/cards/labels/${labelId}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id: labelId }),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to delete label');
-  }
-
-  return response.json();
-};
+}

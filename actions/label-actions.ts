@@ -2,63 +2,55 @@ import { db } from '@/lib/db';
 import { fetcher } from '@/lib/fetcher';
 import { revalidatePath } from 'next/cache';
 
-export const createLabel = async (cardId: string,  title: string, color: string) => {
+export const createLabel = async (cardId: string, title: string, color: string) => {
   try {
     const createdLabel = await db.label.create({
       data: {
         cardId,
         title,
         color,
-        
       },
-      
     });
-    revalidatePath(`/cards/${cardId}`)
-    console.log(createdLabel)
+    revalidatePath(`/cards/${cardId}`);
+    console.log(createdLabel);
     return createdLabel;
-  } catch(error){
+  } catch (error) {
     console.log(error);
   }
 };
 
 export const fetchLabels = async (cardId: string) => {
-  const labels = await db.label.findMany({
-    where: {
-      cardId: cardId,
+  try {
+    const labels = await db.label.findMany({
+      where: {
+        cardId,
       },
-  });
-  console.log(labels + " from label actions")
-  return labels;
+    });
+    console.log(labels + " from label actions");
+    return labels;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-export const updateLabel = async (label: { id: string; title: string; color: string }, cardId: string) => {
-  const response = await fetch(`/api/cards/${cardId}/labels/${label.id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
+export const createLabelTitle = async (id: string, cardId: string, title: string) => {
+  const labeltitle = await db.checklist.update({
+    where: {
+      id,
     },
-    body: JSON.stringify(label),
+    data: {
+      title: title,
+    },
   });
-
-  if (!response.ok) {
-    throw new Error('Failed to update label');
-  }
-
-  return response.json();
+  revalidatePath(`/cards/${cardId}`);
+  return labeltitle;
 };
 
-export const deleteLabel = async (labelId: string, cardId: string) => {
-  const response = await fetch(`/api/cards/${cardId}/labels`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
+export const deleteLabel = async (id: string, cardId: string) => {
+  await db.label.delete({
+    where: {
+      id,
     },
-    body: JSON.stringify({ id: labelId }),
   });
-
-  if (!response.ok) {
-    throw new Error('Failed to delete label');
-  }
-
-  return response.json();
+  revalidatePath(`/cards/${cardId}`);
 };

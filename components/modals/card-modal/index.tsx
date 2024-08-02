@@ -62,7 +62,7 @@ export const CardModal = () => {
             {/* right side */}
             <div className="flex-col">
               {!cardData ? <Actions.Skeleton /> : <Actions data={cardData} />}
-            <LabelComponent cardId={id!} labels={labels || []} />
+            <LabelComponent cardId={id!} />
             </div>
           </div>
           
