@@ -1,50 +1,61 @@
-import { db } from '@/lib/db';
-import { fetcher } from '@/lib/fetcher';
+"use server";
+
+import { Label } from '@/types';
+import {db} from "@/lib/db"
 import { revalidatePath } from 'next/cache';
 
-export const createLabel = async (cardId: string, title: string, color: string) => {
+export const fetchLabels = async (cardId: string) => {
+  const labels = await db.label.findMany({
+    where: {
+      cardId,
+    },
+  });
+  return labels;
+};
+
+export const createLabel = async (cardId: string, { title, color }: { title: string; color: string }) => {
+  console.log("createLabel", cardId, title);
   try {
+    // Step 1: Get the boardId from the cardId
+    const card = await db.card.findUnique({
+      where: { id: cardId },
+      select: {
+        list: {
+          select: {
+            boardId: true
+          }
+        }
+      }
+    });
+
+    if (!card) {
+      throw new Error('Card not found');
+    }
+
+    const boardId = card.list.boardId;
+    
+    // Step 2: Create the label
     const createdLabel = await db.label.create({
       data: {
         cardId,
         title,
-        color,
+        color
       },
     });
-    revalidatePath(`/cards/${cardId}`);
+
+    console.log("Board Id is: ", boardId);
+
+    // Step 3: Revalidate the paths
+    revalidatePath(`/cards/${cardId}`);  // Revalidate the card path to show updated label
+
     console.log(createdLabel);
     return createdLabel;
+
   } catch (error) {
     console.log(error);
   }
 };
 
-export const fetchLabels = async (cardId: string) => {
-  try {
-    const labels = await db.label.findMany({
-      where: {
-        cardId,
-      },
-    });
-    console.log(labels + " from label actions");
-    return labels;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const createLabelTitle = async (id: string, cardId: string, title: string) => {
-  const labeltitle = await db.checklist.update({
-    where: {
-      id,
-    },
-    data: {
-      title: title,
-    },
-  });
-  revalidatePath(`/cards/${cardId}`);
-  return labeltitle;
-};
 
 export const deleteLabel = async (id: string, cardId: string) => {
   await db.label.delete({
@@ -52,5 +63,5 @@ export const deleteLabel = async (id: string, cardId: string) => {
       id,
     },
   });
-  revalidatePath(`/cards/${cardId}`);
+  revalidatePath(`/cards/${cardId}`)
 };

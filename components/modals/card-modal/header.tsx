@@ -5,7 +5,6 @@ import { ElementRef, useRef, useState } from "react";
 import { Layout } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { CardWithList } from "@/types";
 import { useAction } from "@/hooks/use-action";
 import { updateCard } from "@/actions/update-card";
@@ -19,6 +18,8 @@ interface HeaderProps {
 export const Header = ({ data }: HeaderProps) => {
   const queryClient = useQueryClient();
   const params = useParams();
+
+
 
   const { execute } = useAction(updateCard, {
     onSuccess: (data) => {
@@ -78,6 +79,7 @@ export const Header = ({ data }: HeaderProps) => {
           in list <span className="underline">{data.list.title}</span>
         </p>
       </div>
+
     </div>
   );
 };
@@ -90,6 +92,10 @@ Header.Skeleton = function HeaderSkeleton() {
         <Skeleton className="w-24 h-6 mb-1 bg-neutral-200" />
         <Skeleton className="w-12 h-4 bg-neutral-200" />
       </div>
+
+
+      
+      
     </div>
   );
 };

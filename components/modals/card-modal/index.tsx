@@ -32,11 +32,6 @@ export const CardModal = () => {
     queryFn: () => fetcher(`/api/cards/${id}/logs`),
   });
 
-  const { data: labels } = useQuery<Label[]>({
-    queryKey: ["labels", id],
-    queryFn: () => fetcher(`/api/cards/${id}/labels`),
-  });
-
   return (
     <QueryProvider>
       <Dialog open={isOpen} onOpenChange={onClose}>

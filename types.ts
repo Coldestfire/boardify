@@ -21,8 +21,8 @@ export interface Checklist {
   completed: boolean;
 }
 
-export interface Label {
+export interface Label{
   id: string;
-  title: string | undefined;
+  title: string;
   color: string;
 }
